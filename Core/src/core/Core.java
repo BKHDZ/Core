@@ -43,8 +43,8 @@ public class Core {
 
             Table data=managerMysql.executeSelectAsTable("SELECT * FROM t1");
             for (Map.Entry<String, Row> entry : data.getRows().entrySet()) {
-            entry.getValue().getUnit("c1").getDataAsString();
-                
+                entry.getValue().getUnit("c1").getDataAsString();
+                  System.out.println(entry.getValue().getUnit("c1").getDataAsString() +" ////// "+entry.getValue().getUnit("c2").getDataAsString()   );             
             }
 
             managerMysql.closeConnection();

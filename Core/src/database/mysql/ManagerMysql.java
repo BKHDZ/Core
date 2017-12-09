@@ -22,27 +22,27 @@ import java.util.Map;
  * @author FAMILIA
  */
 public class ManagerMysql {
-    
+
     Unit currentUnit;
     Row currentRow;
     Table currentTable;
     Connection connection;
     Statement st;
     ResultSet rs;
-    
+
     public ManagerMysql() {
         connection = null;
         st = null;
         rs = null;
     }
-    
+
     public void getConnection(ConnectionParameters connectionParameters) throws Exception {
         if (connection == null) {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection("jdbc:mysql://" + connectionParameters.getHost() + "/" + connectionParameters.getDb() + "?user=" + connectionParameters.getUser() + "&password=" + connectionParameters.getPassword() + "");
         }
     }
-    
+
     public void closeConnection() throws Exception {
         if (connection != null) {
             closeOthers();
@@ -50,12 +50,12 @@ public class ManagerMysql {
             connection = null;
         }
     }
-    
+
     public void executeSelect(String query) throws Exception {
         currentTable = new Table();
         st = connection.createStatement();
         rs = st.executeQuery(query);
-        
+
         ResultSetMetaData rsmd = rs.getMetaData();
         Column currentColumn;
         String dbName;
@@ -72,9 +72,16 @@ public class ManagerMysql {
             currentColumn = new Column(i - 1, dbName, db_type);
             currentTable.addColumn(currentColumn.getDbName(), currentColumn);
         }
-        
     }
-    
+
+    public void executeDML(String dml) throws Exception {
+        st = connection.createStatement();
+        System.out.println("Ejecucion de DML [" + dml + "]");
+        st.execute(dml);
+        System.out.println("Ejecucion exitosa de DML [" + dml + "]");
+
+    }
+
     public Table executeSelectAsTable(String query) throws Exception {
         executeSelect(query);
         while (getNextRow()) {
@@ -82,7 +89,7 @@ public class ManagerMysql {
         }
         return currentTable;
     }
-    
+
     public boolean getNextRow() throws Exception {
         if (rs.next()) {
             currentRow = new Row();
@@ -96,11 +103,11 @@ public class ManagerMysql {
             return false;
         }
     }
-    
+
     public Row getCurrentRow() {
         return currentRow;
     }
-    
+
     private void closeOthers() {
         try {
             st.close();
@@ -115,5 +122,5 @@ public class ManagerMysql {
         st = null;
         rs = null;
     }
-    
+
 }

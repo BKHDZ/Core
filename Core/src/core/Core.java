@@ -33,6 +33,8 @@ public class Core {
         try {
             managerMysql.getConnection(new ConnectionParameters("training_usser", "training_usser1", "192.168.100.5", "3306", "training", null));
 
+            managerMysql.executeDML("CREATE TABLE AAA1(ID_TABLA INT)");
+            
 //            managerMysql.executeSelect("SELECT * FROM t1");
 //            Row cRow;
 //            while (managerMysql.getNextRow()) {
